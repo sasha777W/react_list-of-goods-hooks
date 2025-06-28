@@ -24,15 +24,15 @@ interface SortType {
 
 function getPreparedGoods(
   goods: string[],
-  { sortedByAlp, sortedByLeng, reversed }: SortType
+  { sortedByAlp, sortedByLeng, reversed }: SortType,
 ): string[] {
   const sortedGoods = [...goods];
 
-  if (sortedByAlp) {
+  if (sortedByAlp && !sortedByLeng) {
     sortedGoods.sort((a, b) => a.localeCompare(b));
   }
 
-  if (sortedByLeng) {
+  if (sortedByLeng && !sortedByAlp) {
     sortedGoods.sort((a, b) => a.length - b.length);
   }
 
@@ -48,8 +48,11 @@ export const App: React.FC = () => {
   const [reversed, setReversed] = useState(false);
   const [sortedByLeng, setSortedByLeng] = useState(false);
 
-  const visiableGoods = getPreparedGoods(goodsFromServer, { sortedByAlp, reversed, sortedByLeng } );
-
+  const visiableGoods = getPreparedGoods(goodsFromServer, {
+    sortedByAlp,
+    reversed,
+    sortedByLeng,
+  });
 
   return (
     <div className="section content">
@@ -62,8 +65,7 @@ export const App: React.FC = () => {
           onClick={() => {
             setSortedByAlp(true);
             setSortedByLeng(false);
-          }
-          }
+          }}
         >
           Sort alphabetically
         </button>
@@ -76,9 +78,7 @@ export const App: React.FC = () => {
           onClick={() => {
             setSortedByLeng(true);
             setSortedByAlp(false);
-          }
-
-          }
+          }}
         >
           Sort by length
         </button>
